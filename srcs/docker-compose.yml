@@ -1,0 +1,8 @@
+version: '2.2.3'
+
+services:
+  mariadb:
+    image: mariadb
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
