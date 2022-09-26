@@ -1,13 +1,13 @@
 FROM debian:buster
 
-LABEL version="1.0"
-LABEL maintainer="Kenny DUONG <chduong@student.42.fr>"
-LABEL description="MariaDB Server"
+RUN apt update && apt install -y mariadb-server mariadb-client gettext-base
 
-RUN apt-get update && apt-get install -y mariadb-server mariadb-client gettext-base
+LABEL   version="1.0"\
+        maintainer="Kenny DUONG <chduong@student.42.fr>"\
+        description="MariaDB Server"
 
-COPY ./config/server.cnf /etc/mysql/mariadb.conf.d/server.cnf
-COPY ./config/script.sh /var/.
-COPY ./config/init.sql /var/.
+EXPOSE 3306
+
+COPY config/script.sh /var/script.sh
 
 CMD ["sh", "/var/script.sh" ]

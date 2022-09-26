@@ -1,8 +1,31 @@
-version: '2.2.3'
+version: '3.8'
 
 services:
+
   mariadb:
-    image: mariadb
+    container_name: mariadb
+    build: requirements/mariadb
     volumes:
-      - db_data:/var/lib/mysql
-    restart: always
+      - 
+      - 
+    ports:
+      - "3306"
+    networks:
+      - net_inception
+    restart: unless-stopped
+    env_file: .env
+    healthcheck:
+      test: mysqladmin ping --host=localhost --password="${MARIADB_ROOT_PASSWORD}"
+      interval: 5s
+      timeout: 1s
+      retries: 10
+      start_period: 5s
+
+  nginx:
+    ports:
+      - "443"
+    volumes:
+    - ./nginx/default.conf:/etc/nginc/conf.d/default.conf
+    - ./wordpress:/var/www/html:delegated
+
+  wordpress:
