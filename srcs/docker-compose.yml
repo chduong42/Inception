@@ -12,20 +12,20 @@ services:
       - "3306"
     networks:
       - net_inception
-    restart: unless-stopped
+    restart: always
     env_file: .env
-    healthcheck:
-      test: mysqladmin ping --host=localhost --password="${MARIADB_ROOT_PASSWORD}"
-      interval: 5s
-      timeout: 1s
-      retries: 10
-      start_period: 5s
 
   nginx:
+    container_name: nginx
+    build: requirements/nginx
+    depends_on :
+      - wordpress
     ports:
-      - "443"
+      - 443:443
+    restart: always
     volumes:
-    - ./nginx/default.conf:/etc/nginc/conf.d/default.conf
-    - ./wordpress:/var/www/html:delegated
+      - wordpress_data:/var/www/html
+    networks: 
+      - network
 
   wordpress:

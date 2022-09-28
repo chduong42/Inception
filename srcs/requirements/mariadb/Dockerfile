@@ -10,4 +10,4 @@ EXPOSE 3306
 
 COPY config/script.sh /var/script.sh
 
-CMD ["sh", "/var/script.sh" ]
+CMD ["sh", "/var/script.sh" ]  
