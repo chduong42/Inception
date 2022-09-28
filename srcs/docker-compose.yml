@@ -1,13 +1,11 @@
 version: '3.8'
 
 services:
-
   mariadb:
     container_name: mariadb
     build: requirements/mariadb
     volumes:
-      - 
-      - 
+      - mariadb_data:/var/lib/mysql/
     ports:
       - "3306"
     networks:
@@ -29,3 +27,35 @@ services:
       - network
 
   wordpress:
+    container_name: wordpress
+    depends_on:
+      - mariadb
+    build: requirements/wordpress
+    restart: always
+    env_file:
+      - .env
+    ports:
+     - 9000:9000
+    volumes:
+      - wordpress_data:/var/www/html
+    networks: 
+      - network
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/chduong/data/db_data
+      o: bind
+
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/chduong/data/wordpress
+      o: bind
+
+networks:
+  network:
+    driver: bridge
