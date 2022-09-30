@@ -1,6 +1,4 @@
-FROM debian:buster
-
-RUN apt update && apt install -y mariadb-server mariadb-client gettext-base
+FROM alpine:3.16
 
 LABEL   version="1.0"\
         maintainer="Kenny DUONG <chduong@student.42.fr>"\
@@ -8,6 +6,8 @@ LABEL   version="1.0"\
 
 EXPOSE 3306
 
+RUN apk -U upgrade && apk add --no-cache mariadb mariadb-client gettext-base
+
 COPY config/script.sh /var/script.sh
 
-CMD ["sh", "/var/script.sh" ]  
+CMD ["sh", "/var/script.sh" ]

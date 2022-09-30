@@ -10,7 +10,7 @@ services:
       - "3306"
     networks:
       - net_inception
-    restart: always
+    restart: unless-stopped
     env_file: .env
 
   nginx:
@@ -20,7 +20,7 @@ services:
       - wordpress
     ports:
       - 443:443
-    restart: always
+    restart: unless-stopped
     volumes:
       - wordpress_data:/var/www/html
     networks: 
@@ -31,7 +31,7 @@ services:
     depends_on:
       - mariadb
     build: requirements/wordpress
-    restart: always
+    restart: unless-stopped
     env_file:
       - .env
     ports:
