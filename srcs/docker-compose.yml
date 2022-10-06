@@ -46,7 +46,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/chduong/data/db_data
+      device: /home/chduong/data/mariadb
       o: bind
 
   wordpress_data:
