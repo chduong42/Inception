@@ -1,36 +1,40 @@
-version: '3.8'
+version: '3'
 
 services:
   mariadb:
     container_name: mariadb
-    build: requirements/mariadb
+    # build: requirements/mariadb
+    image: mariadb
     volumes:
       - mariadb_data:/var/lib/mysql/
     ports:
       - "3306"
     networks:
-      - net_inception
+      - network
     restart: unless-stopped
     env_file: .env
 
   nginx:
     container_name: nginx
-    build: requirements/nginx
+    # build: requirements/nginx
+    image: nginx:alpine
     depends_on :
       - wordpress
     ports:
-      - 443:443
+      - 8080:80
     restart: unless-stopped
     volumes:
+      - nginx:/etc/nginx/conf.d
       - wordpress_data:/var/www/html
     networks: 
       - network
 
   wordpress:
     container_name: wordpress
+    # build: requirements/wordpress
+    image : wordpress:php7.3-fpm-alpine
     depends_on:
       - mariadb
-    build: requirements/wordpress
     restart: unless-stopped
     env_file:
       - .env

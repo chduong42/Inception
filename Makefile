@@ -6,12 +6,12 @@
 #    By: chduong <chduong@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/28 19:17:46 by chduong           #+#    #+#              #
-#    Updated: 2022/09/28 19:27:18 by chduong          ###   ########.fr        #
+#    Updated: 2022/10/10 18:02:21 by chduong          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 all:
-	@docker-compose -f ./scrs/docker-compose.yml up -d --build
+	@docker-compose -f ./srcs/docker-compose.yml up -d --build
 
 stop:
 	@docker-compose -f srcs/docker-compose.yml stop
