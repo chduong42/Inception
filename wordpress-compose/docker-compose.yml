@@ -37,12 +37,12 @@ services:
             - ./nginx/config:/etc/nginx/conf.d      
             - /data/html:/var/www/html    
         ports:      
-            - 8080:443    
+            - 8080:80    
         networks: 
             - default
 
 volumes:
-  database:
+  wp_database:
     driver: local
     driver_opts:
       type: none
