@@ -9,7 +9,9 @@ services:
             MYSQL_ROOT_PASSWORD: mysql_root_pass      
             MYSQL_DATABASE: db_name      
             MYSQL_USER: user_name      
-            MYSQL_PASSWORD: user_pass    
+            MYSQL_PASSWORD: user_pass
+        networks: 
+            - default 
         restart: always
         
     wordpress:    
@@ -25,8 +27,8 @@ services:
             WORDPRESS_DB_USER: user_name      
             WORDPRESS_DB_PASSWORD: user_pass      
             WORDPRESS_TABLE_PREFIX: wp_    
-        links:      
-            - mysql  
+        networks: 
+            - default
         restart: always  
         
     nginx:
@@ -36,5 +38,9 @@ services:
             - /data/html:/var/www/html    
         ports:      
             - 8080:80    
-        links: 
-            - wordpress
+        networks: 
+            - default
+
+networks:
+  default:
+    driver: bridge

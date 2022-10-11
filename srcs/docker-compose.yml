@@ -10,7 +10,7 @@ services:
     ports:
       - "3306"
     networks:
-      - network
+      - default
     restart: unless-stopped
     env_file: .env
 
@@ -27,7 +27,7 @@ services:
       - nginx:/etc/nginx/conf.d
       - wordpress_data:/var/www/html
     networks: 
-      - network
+      - default
 
   wordpress:
     container_name: wordpress
@@ -43,7 +43,7 @@ services:
     volumes:
       - wordpress_data:/var/www/html
     networks: 
-      - network
+      - default
 
 volumes:
   mariadb_data:
@@ -61,5 +61,5 @@ volumes:
       o: bind
 
 networks:
-  network:
+  default:
     driver: bridge
