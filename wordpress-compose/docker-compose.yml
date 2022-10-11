@@ -34,7 +34,7 @@ services:
     nginx:
         image: nginx:alpine    
         volumes:      
-            - nginx:/etc/nginx/conf.d      
+            - ./nginx/config:/etc/nginx/conf.d      
             - /data/html:/var/www/html    
         ports:      
             - 8080:80    
