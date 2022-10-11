@@ -4,7 +4,7 @@ services:
     mysql:
         image: mariadb
         volumes:
-            - /data/mysql:/var/lib/mysql    
+            - MariaDB_data:/var/lib/mysql    
         environment:      
             MYSQL_ROOT_PASSWORD: mysql_root_pass      
             MYSQL_DATABASE: db_name      
@@ -17,7 +17,7 @@ services:
     wordpress:    
         image: wordpress:php7.3-fpm-alpine    
         volumes:      
-            - /data/html:/var/www/html    
+            - WordPress_data:/var/www/html    
         depends_on:      
             - mysql    
         environment:      
@@ -35,21 +35,21 @@ services:
         image: nginx:alpine    
         volumes:      
             - ./nginx/config:/etc/nginx/conf.d      
-            - /data/html:/var/www/html    
+            - WordPress_data:/var/www/html    
         ports:      
             - 8080:80    
         networks: 
             - default
 
 volumes:
-  wp_database:
+  MariaDB_data:
     driver: local
     driver_opts:
       type: none
       device: /home/chduong/data/mariadb
       o: bind
 
-  wp_data:
+  WordPress_data:
     driver: local
     driver_opts:
       type: none
