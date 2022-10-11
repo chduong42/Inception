@@ -14,21 +14,6 @@ services:
     restart: unless-stopped
     env_file: .env
 
-  nginx:
-    container_name: nginx
-    # build: requirements/nginx
-    image: nginx:alpine
-    depends_on :
-      - wordpress
-    ports:
-      - 8080:80
-    restart: unless-stopped
-    volumes:
-      - nginx:/etc/nginx/conf.d
-      - wordpress_data:/var/www/html
-    networks: 
-      - default
-
   wordpress:
     container_name: wordpress
     # build: requirements/wordpress
@@ -41,6 +26,21 @@ services:
     ports:
      - 9000:9000
     volumes:
+      - wordpress_data:/var/www/html
+    networks: 
+      - default
+
+  nginx:
+    container_name: nginx
+    # build: requirements/nginx
+    image: nginx:alpine
+    depends_on :
+      - wordpress
+    ports:
+      - 8080:80
+    restart: unless-stopped
+    volumes:
+      - nginx:/etc/nginx/conf.d
       - wordpress_data:/var/www/html
     networks: 
       - default

@@ -37,9 +37,24 @@ services:
             - ./nginx/config:/etc/nginx/conf.d      
             - /data/html:/var/www/html    
         ports:      
-            - 8080:80    
+            - 8080:443    
         networks: 
             - default
+
+volumes:
+  database:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/chduong/data/mariadb
+      o: bind
+
+  wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/chduong/data/wordpress
+      o: bind
 
 networks:
   default:
