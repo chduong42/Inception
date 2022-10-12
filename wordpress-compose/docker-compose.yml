@@ -1,10 +1,10 @@
 version: '3'
 
 services:
-    mysql:
+    mariadb:
         image: mariadb
         volumes:
-            - MariaDB_data:/var/lib/mysql    
+            - MariaDB:/var/lib/mysql    
         environment:      
             MYSQL_ROOT_PASSWORD: mysql_root_pass      
             MYSQL_DATABASE: db_name      
@@ -17,34 +17,45 @@ services:
     wordpress:    
         image: wordpress:php7.3-fpm-alpine    
         volumes:      
-            - WordPress_data:/var/www/html    
+            - WordPress:/var/www/html    
         depends_on:      
-            - mysql    
+            - mariadb    
         environment:      
             WORDPRESS_DB_HOST: mysql      
             MYSQL_ROOT_PASSWORD: mysql_root_pass      
             WORDPRESS_DB_NAME: db_name      
             WORDPRESS_DB_USER: user_name      
-            WORDPRESS_DB_PASSWORD: user_pass      
-            WORDPRESS_TABLE_PREFIX: wp_    
+            WORDPRESS_DB_PASSWORD: user_pass
         networks: 
             - default
         restart: always  
         
     nginx:
-        image: nginx:alpine    
-        volumes:      
-            - ./nginx/config:/etc/nginx/conf.d      
-            - WordPress_data:/var/www/html    
+        container_name: nginx
+        build: requirements/nginx
+        volumes:
+            - WordPress:/var/www/html
         ports:      
-            - 8080:80    
+            - 443:443
         networks: 
             - default
+        restart: always  
+
 
 volumes:
-  MariaDB_data:
-  WordPress_data:
+  MariaDB:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/chduong/data/mariadb
+      o: bind
 
+  WordPress:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/chduong/data/wordpress
+      o: bind
 
 networks:
   default:

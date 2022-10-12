@@ -1,10 +1,9 @@
-version: '3'
+version: '3.8'
 
 services:
   mariadb:
     container_name: mariadb
-    # build: requirements/mariadb
-    image: mariadb
+    build: requirements/mariadb
     volumes:
       - mariadb_data:/var/lib/mysql/
     ports:
@@ -17,7 +16,6 @@ services:
   wordpress:
     container_name: wordpress
     # build: requirements/wordpress
-    image : wordpress:php7.3-fpm-alpine
     depends_on:
       - mariadb
     restart: unless-stopped
@@ -33,7 +31,6 @@ services:
   nginx:
     container_name: nginx
     # build: requirements/nginx
-    image: nginx:alpine
     depends_on :
       - wordpress
     ports:
