@@ -8,8 +8,8 @@ RUN apk -U upgrade && apk add --no-cache nginx openssl
 
 # generate self-signed ssl key-certificate pair
 RUN openssl req -x509 -newkey rsa:4096 \
-	-keyout /etc/ssl/certs/chduong.42.fr.key \
-	-out /etc/ssl/certs/chduong.42.fr.crt \
+	-keyout /etc/ssl/certs/chduong.key \
+	-out /etc/ssl/certs/chduong.crt \
 	-sha256 -days 365 -nodes \
         -subj "/C=FR/ST=France/L=Paris/O=Me/OU=42Paris/CN=localhost/emailAddress=chduong@student.42.fr"
 
