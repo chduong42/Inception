@@ -17,7 +17,9 @@ services:
     wordpress:    
         image: wordpress:php7.3-fpm-alpine    
         volumes:      
-            - WordPress:/var/www/html    
+            - WordPress:/var/www/html
+        ports:   
+            - 9000:9000
         depends_on:      
             - mariadb    
         environment:      
