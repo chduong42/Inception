@@ -5,8 +5,6 @@ services:
         image: mariadb
         volumes:
             - MariaDB:/var/lib/mysql
-        ports:   
-            - '3306'
         env_file :
          - .env
         networks: 
@@ -17,8 +15,6 @@ services:
         image: wordpress:php7.3-fpm-alpine    
         volumes:      
             - WordPress:/var/www/html
-        ports:   
-            - '9000'
         depends_on:      
             - mariadb    
         env_file :
