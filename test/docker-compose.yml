@@ -36,7 +36,7 @@ services:
         volumes:
             - WordPress:/var/www/html
         ports:      
-            - "443:443"
+            - 443:443
         networks: 
             - default
         restart: always
