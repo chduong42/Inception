@@ -35,6 +35,8 @@ services:
     nginx:
         container_name: nginx
         build: nginx
+        depends_on:      
+            - wordpress
         volumes:
             - WordPress:/var/www/html
         ports:      
