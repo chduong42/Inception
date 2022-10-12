@@ -12,6 +12,6 @@ RUN openssl req -x509 -newkey rsa:4096 -sha256 -days 365 -nodes \
 	-keyout /etc/ssl/certs/chduong.key \
         -subj "/C=FR/ST=France/L=Paris/O=Me/OU=42Paris/CN=localhost/emailAddress=chduong@student.42.fr"
 
-COPY ./config/server.conf /etc/nginx/conf.d
+COPY config/server.conf /etc/nginx/http.d/default.conf
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
