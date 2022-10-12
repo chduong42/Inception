@@ -6,12 +6,9 @@ services:
         volumes:
             - MariaDB:/var/lib/mysql
         ports:   
-            - 3306:3306
-        environment:      
-            MYSQL_ROOT_PASSWORD: mysql_root_pass      
-            MYSQL_DATABASE: db_name      
-            MYSQL_USER: user_name      
-            MYSQL_PASSWORD: user_pass
+            - '3306'
+        env_file :
+         - .env
         networks: 
             - default 
         restart: always
@@ -21,15 +18,11 @@ services:
         volumes:      
             - WordPress:/var/www/html
         ports:   
-            - 9000:9000
+            - '9000'
         depends_on:      
             - mariadb    
-        environment:      
-            WORDPRESS_DB_HOST: mysql      
-            MYSQL_ROOT_PASSWORD: mysql_root_pass      
-            WORDPRESS_DB_NAME: db_name      
-            WORDPRESS_DB_USER: user_name      
-            WORDPRESS_DB_PASSWORD: user_pass
+        env_file :
+            - .env
         networks: 
             - default
         restart: always  
@@ -37,12 +30,13 @@ services:
     nginx:
         container_name: nginx
         build: nginx
+        image: nginx
         depends_on:      
             - wordpress
         volumes:
             - WordPress:/var/www/html
         ports:      
-            - 443:443
+            - "443:443"
         networks: 
             - default
         restart: always
