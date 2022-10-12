@@ -2,7 +2,7 @@ version: '3'
 
 services:
     mariadb:
-        image: mariadb
+        image: mariadb:alpine
         volumes:
             - MariaDB:/var/lib/mysql
         ports:   
