@@ -7,10 +7,9 @@ LABEL   version="1.0"\
 RUN apk -U upgrade && apk add --no-cache nginx openssl
 
 # generate self-signed ssl key-certificate pair
-RUN openssl req -x509 -newkey rsa:4096 \
-	-keyout /etc/ssl/certs/chduong.key \
+RUN openssl req -x509 -newkey rsa:4096 -sha256 -days 365 -nodes \
 	-out /etc/ssl/certs/chduong.crt \
-	-sha256 -days 365 -nodes \
+	-keyout /etc/ssl/certs/chduong.key \
         -subj "/C=FR/ST=France/L=Paris/O=Me/OU=42Paris/CN=localhost/emailAddress=chduong@student.42.fr"
 
 COPY ./config/server.conf /etc/nginx/conf.d
