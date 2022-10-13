@@ -12,4 +12,4 @@ RUN apk add --update --no-cache nginx openssl \
 
 COPY ./config/server.conf /etc/nginx/http.d/default.conf
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
