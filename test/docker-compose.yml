@@ -6,9 +6,9 @@ services:
         volumes:
             - MariaDB:/var/lib/mysql
         ports:   
-            - 3306:3306
+            - "3306"
         networks: 
-            - default 
+            - backend 
         restart: always
         environment:      
             MYSQL_ROOT_PASSWORD: mysql_root_pass      
@@ -21,11 +21,11 @@ services:
         volumes:      
             - WordPress:/var/www/html
         ports:   
-            - 9000:9000
+            - "9000"
         depends_on:      
             - mariadb    
         networks: 
-            - default
+            - backend
         restart: always  
         environment:
             WORDPRESS_DB_HOST: mysql
@@ -36,16 +36,16 @@ services:
             WORDPRESS_TABLE_PREFIX: wp_
 
     nginx:
-        container_name: nginx
         build: nginx
+        container_name: nginx
         depends_on:      
             - wordpress
         volumes:
             - WordPress:/var/www/html
         ports:      
-            - 443:443
+            - "443:443"
         networks: 
-            - default
+            - backend
         restart: always
 
 volumes:
@@ -64,5 +64,5 @@ volumes:
       o: bind
 
 networks:
-  default:
+  backend:
     driver: bridge

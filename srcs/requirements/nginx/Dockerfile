@@ -1,21 +1,17 @@
-FROM alpine:3.16
+FROM alpine:3.15.6
 
 LABEL   version="1.0"\
         maintainer="Kenny DUONG <chduong@student.42.fr>"\
         description="NGINX"
 
-# EXPOSE	443
-
-RUN apk -U upgrade && apk add --no-cache nginx openssl curl vim
+RUN apk -U upgrade && apk add --no-cache nginx openssl
 
 # generate self-signed ssl key-certificate pair
+RUN openssl req -x509 -newkey rsa:4096 -sha256 -days 365 -nodes \
+	-out /etc/ssl/certs/chduong.crt \
+	-keyout /etc/ssl/certs/chduong.key \
+        -subj "/C=FR/ST=France/L=Paris/O=Me/OU=42Paris/CN=localhost/emailAddress=chduong@student.42.fr"
 
-# RUN openssl req -x509 -newkey rsa:4096 \
-# 	-keyout /etc/ssl/certs/inception.key \
-# 	-out /etc/ssl/certs/inception.crt \
-# 	-sha256 -days 365 -nodes \
-#         -subj "/C=FR/ST=France/L=Paris/O=Me/OU=42Paris/CN=localhost/emailAddress=chduong@student.42.fr"
-
-COPY ./config/nginx.conf /etc/nginx/conf.d
+COPY config/server.conf /etc/nginx/http.d/default.conf
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
