@@ -6,7 +6,7 @@ LABEL   version="1.0"\
 
 EXPOSE 9000
 
-RUN apk update && apk upgrade && apk add php7 php7-fpm php7-opcache php7-gd php7-mysqli php7-zlib php7-curl
+RUN apk --update add --no-cahe curl php7 php7-fpm php7-opcache php7-gd php7-mysqli php7-zlib php7-curl
 
 # Copy the .conf in the html directory
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/

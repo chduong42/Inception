@@ -43,19 +43,28 @@ else
     mariadb-install-db ${MYSQL_INSTALL_OPT}
     # initialize mariadb 'offline' (without a running daemon)
     {
+        # # Create ${DB_NAME}
+        # CREATE DATABASE IF NOT EXISTS ${WP_DB_NAME};
+        # # Create new user wordpress
+        # CREATE USER IF NOT EXISTS 'wordpress'@'%' IDENTIFIED by '${WP_DB_PWD}';
+        # # Give access to all database wordpress to the user 'wordpress'
+        # GRANT ALL PRIVILEGES ON ${WP_DB_NAME}.* TO 'wordpress'@'%' WITH GRANT OPTION;
+        # # Set up root password
+        # SET PASSWORD FOR 'root'@'localhost'=PASSWORD('${ROOT_PWD}');
+        # FLUSH PRIVILEGES;
+        
+        # initialize privileges table (disabled when running in bootstrap mode)
         echo "FLUSH PRIVILEGES;"
-        echo "CREATE DATABASE wordpress;"
         # delete all root user except the one with localhost as host
         echo "DELETE FROM mysql.user WHERE User = 'root' AND Host != 'localhost';"
         # change root password
-        echo "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${MARIADB_ROOT_PWD}');"
+        echo "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${MARIADB_ROOT_PASSWORD}');"
         # create new user
-        echo "CREATE USER '${WP_DB_USER}'@'%' IDENTIFIED BY '${WP_DB_PWD}';"
+        echo "CREATE USER '${WP_DB_USER}'@'%' IDENTIFIED BY '${WP_DB_PASSWORD}';"
         # give all permissions to the new user
         echo "GRANT ALL PRIVILEGES ON wordpress.* TO '${WP_DB_USER}'@'%';"
         # apply modifications to the grant table (maybe not necessary)
-        echo "FLUSH PRIVILEGES;"
-    } | mariadbd --user=mysql --bootstrap
+        echo "FLUSH PRIVILEGES;"    } | mariadbd --user=mysql --bootstrap
 fi
 
 # delete default configs
