@@ -6,23 +6,16 @@ services:
         container_name: mariadb
         volumes:
             - MariaDB:/var/lib/mysql
-        ports:   
-            - "3306"
         networks: 
             - backend 
         restart: always
-        environment:      
-            MYSQL_ROOT_PASSWORD: mysql_root_pass      
-            MYSQL_DATABASE: db_name      
-            MYSQL_USER: user_name      
-            MYSQL_PASSWORD: user_pass
+        env_file:
+            - .env
         
     wordpress:    
         image: wordpress:php7.3-fpm-alpine    
         volumes:      
             - WordPress:/var/www/html
-        ports:   
-            - "9000"
         depends_on:      
             - mariadb    
         networks: 
