@@ -2,7 +2,8 @@ version: '3'
 
 services:
     mariadb:
-        image: mariadb
+        build: mariadb
+        container_name: mariadb
         volumes:
             - MariaDB:/var/lib/mysql
         ports:   
