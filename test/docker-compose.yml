@@ -13,33 +13,28 @@ services:
             - .env
         
     wordpress:    
-        image: wordpress:php7.3-fpm-alpine    
+        build: wordpress
+        container_name: wordpress
         volumes:      
             - WordPress:/var/www/html
         depends_on:      
             - mariadb    
         networks: 
+            - frontend
             - backend
         restart: always  
-        environment:
-            WORDPRESS_DB_HOST: mysql
-            MYSQL_ROOT_PASSWORD: mysql_root_pass
-            WORDPRESS_DB_NAME: db_name
-            WORDPRESS_DB_USER: user_name
-            WORDPRESS_DB_PASSWORD: user_pass
-            WORDPRESS_TABLE_PREFIX: wp_
+        env_file:
+            - .env
 
     nginx:
         build: nginx
         container_name: nginx
-        depends_on:      
-            - wordpress
         volumes:
             - WordPress:/var/www/html
         ports:      
             - "443:443"
         networks: 
-            - backend
+            - frontend
         restart: always
 
 volumes:
@@ -58,5 +53,7 @@ volumes:
       o: bind
 
 networks:
-  backend:
-    driver: bridge
+    frontend:
+        driver: bridge
+    backend:
+        driver: bridge
