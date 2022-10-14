@@ -1,56 +1,52 @@
-version: '3.8'
+version: '3'
 
 services:
-  mariadb:
-    container_name: mariadb
-    build: requirements/mariadb
-    volumes:
-      - mariadb_data:/var/lib/mysql/
-    ports:
-      - "3306"
-    networks:
-      - default
-    restart: unless-stopped
-    env_file: .env
+    mariadb:
+        build: mariadb
+        container_name: mariadb
+        volumes:
+            - MariaDB:/var/lib/mysql
+        networks: 
+            - backend 
+        restart: always
+        env_file:
+            - .env
+        
+    wordpress:    
+        # build: wordpress
+        # container_name: wordpress
+        image : wordpress:php7.3-fpm-alpine
+        volumes:      
+            - WordPress:/var/www/html
+        depends_on:      
+            - mariadb    
+        networks: 
+            - frontend
+            - backend
+        restart: always  
+        env_file:
+            - .env
 
-  wordpress:
-    container_name: wordpress
-    # build: requirements/wordpress
-    depends_on:
-      - mariadb
-    restart: unless-stopped
-    env_file:
-      - .env
-    ports:
-     - 9000:9000
-    volumes:
-      - wordpress_data:/var/www/html
-    networks: 
-      - default
-
-  nginx:
-    container_name: nginx
-    # build: requirements/nginx
-    depends_on :
-      - wordpress
-    ports:
-      - 8080:80
-    restart: unless-stopped
-    volumes:
-      - nginx:/etc/nginx/conf.d
-      - wordpress_data:/var/www/html
-    networks: 
-      - default
+    nginx:
+        build: nginx
+        container_name: nginx
+        volumes:
+            - WordPress:/var/www/html
+        ports:      
+            - "443:443"
+        networks: 
+            - frontend
+        restart: always
 
 volumes:
-  mariadb_data:
+  MariaDB:
     driver: local
     driver_opts:
       type: none
       device: /home/chduong/data/mariadb
       o: bind
 
-  wordpress_data:
+  WordPress:
     driver: local
     driver_opts:
       type: none
@@ -58,5 +54,7 @@ volumes:
       o: bind
 
 networks:
-  default:
-    driver: bridge
+    frontend:
+        driver: bridge
+    backend:
+        driver: bridge
