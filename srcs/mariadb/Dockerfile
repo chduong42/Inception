@@ -4,8 +4,9 @@ LABEL   version="1.0"\
         maintainer="Kenny DUONG <chduong@student.42.fr>"\
         description="MariaDB Server"
 
-COPY script/install.sh /var/install.sh
+COPY script/run.sh /tmp/run.sh
+COPY script/install.sh /tmp/install.sh
 
-RUN apk --update add --no-cache mariadb mariadb-common mariadb-client 
+RUN apk -U upgrade && apk add --no-cache mariadb mariadb-client
 
-ENTRYPOINT ["sh", "/var/script.sh" ]
+ENTRYPOINT [ "sh", "/tmp/run.sh" ]

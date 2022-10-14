@@ -39,18 +39,20 @@ services:
 
 volumes:
   MariaDB:
+    name: MariaDB
     driver: local
     driver_opts:
       type: none
-      device: /home/chduong/data/mariadb
       o: bind
+      device: /home/chduong/data/mariadb
 
   WordPress:
+    name: WordPress
     driver: local
     driver_opts:
       type: none
-      device: /home/chduong/data/wordpress
       o: bind
+      device: /home/chduong/data/wordpress
 
 networks:
     backend:

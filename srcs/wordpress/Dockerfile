@@ -1,26 +1,48 @@
-FROM alpine:3.16
+FROM alpine:3.15.6
 
 LABEL   version="1.0"\
         maintainer="Kenny DUONG <chduong@student.42.fr>"\
         description="WordPress"
 
-EXPOSE 9000
+ARG WPCLI_URL="https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
+ARG ALPINE_REPO_TESTING="https://dl-cdn.alpinelinux.org/alpine/edge/testing"
 
-RUN apk --update add --no-cahe curl php7 php7-fpm php7-opcache php7-gd php7-mysqli php7-zlib php7-curl
+# create a user that will run php-fpm
+#  options:
+#   -S -> create a system account
+#   -D -> do not create home directory
+#   -H -> do not create home directory
+RUN adduser -SDH www-data
 
-# Copy the .conf in the html directory
-COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
+# https://make.wordpress.org/hosting/handbook/server-environment/
 
-#Create the folder to enable php start
-RUN mkdir /run/php
+# as of alpine 3.16, php7 is not in the community repository anymore
+# https://gitlab.alpinelinux.org/alpine/aports/-/commit/dd0e687c7a10a50a70736ae8b715c5e8911e8630
+# https://wiki.alpinelinux.org/wiki/Release_Notes_for_Alpine_3.16.0#php7_moved_to_testing
+RUN apk -U upgrade && apk add --no-cache --repository="${ALPINE_REPO_TESTING}" \
+	php7 php7-fpm php7-mysqli php7-json \
+	php7-curl php7-dom php7-exif php7-fileinfo \
+	php7-imagick php7-mbstring php7-openssl \
+	php7-xml php7-zip php7-iconv php7-intl \
+	php7-simplexml php7-sodium php7-xmlreader \
+	php7-zlib php7-ssh2 php7-ftp php7-sockets \
+	php7-session php7-phar php7-tokenizer
+RUN apk add --no-cache \
+	curl imagemagick mariadb-client fcgi
 
-#we copy the script, give the right to launch it in local on our computer
-COPY ./tools/create_wordpress.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/create_wordpress.sh
-ENTRYPOINT ["/usr/local/bin/create_wordpress.sh"]
+# THEY RENAMED THE BINARY 'php' TO 'php7' WHEN MOVING IT TO TESTING
+# *angry developer noises*
+#RUN ln -s /usr/bin/php7 /usr/bin/php
 
-#We go the html directory
-WORKDIR /var/www/html/
+RUN rm -rf /etc/php7/php-fpm.d
+COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
 
-#Launch PHP FPM in foreground and ignore deamonize from conf file (-F)
-CMD ["/usr/sbin/php-fpm7.3", "-F"]
+RUN mkdir -p /var/www
+
+# https://wp-cli.org/
+RUN curl -Lo /usr/bin/wp ${WPCLI_URL} && chmod +x /usr/bin/wp
+
+COPY script/install.sh /tmp/install.sh
+
+# ENTRYPOINT [ "php-fpm7", "-F", "-y", "/etc/php7/php-fpm.conf" ]
+ENTRYPOINT [ "sh", "/tmp/install.sh" ]

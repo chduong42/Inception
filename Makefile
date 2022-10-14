@@ -10,26 +10,28 @@
 #                                                                              #
 # **************************************************************************** #
 
-all:
-	@docker-compose -f srcs/docker-compose.yml up -d --build
+HOME	=	/home/chduong/
+DOCKER	=	docker-compose
 
-stop:
-	@docker-compose -f srcs/docker-compose.yml stop
+all		:
+	mkdir -p $(HOME)data/wordpress
+	mkdir -p $(HOME)data/mariadb
+	$(DOCKER) -f srcs/docker-compose.yml build
+	$(DOCKER) -f srcs/docker-compose.yml up -d
 
-down:
-	@docker-compose -f srcs/docker-compose.yml down
+stop	:
+	$(DOCKER) -f srcs/docker-compose.yml stop
 
-re: clean
-	@docker-compose -f srcs/docker-compose.yml up -d --build
+down	:
+	$(DOCKER) -f srcs/docker-compose.yml down
 
 clean:
-	@docker stop $$(docker ps -qa);\
-	docker rm $$(docker ps -qa);\
-	docker rmi -f $$(docker images -qa);\
-	docker volume rm $$(docker volume ls -q);\
-	docker network rm $$(docker network ls -q);\
+	docker volume ls -qf dangling=true | xargs -r docker volume rm
+	docker system prune -f -a
 
 fclean: stop clean
 	sudo rm -rf ${HOME}data
+
+re : fclean all
 
 .PHONY: all re down clean
