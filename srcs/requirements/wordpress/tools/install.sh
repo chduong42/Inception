@@ -5,12 +5,6 @@ WP_PATH='/var/www/html/wordpress'
 set -e -x
 
 mkdir -p "${WP_PATH}"
-mkdir -p /var/log/php7
-
-for file in access error; do
-    touch "/var/log/php7/${file}.log"
-    chmod 644 "/var/log/php7/${file}.log"
-done
 
 if ! wp core is-installed --path="${WP_PATH}" 2> /dev/null; then
     rm -rf "${WP_PATH:?}/*"
@@ -34,9 +28,9 @@ if ! wp core is-installed --path="${WP_PATH}" 2> /dev/null; then
         --admin_email="${WP_ADMIN_EMAIL}" \
         --skip-email
     wp user create \
-        "${WP_USER}" \
-        "${WP_EMAIL}" \
-        --user_pass="${WP_PWD}" \
+        "${WP_USER_NAME}" \
+        "${WP_USER_EMAIL}" \
+        --user_pass="${WP_USER_PWD}" \
         --porcelain
 
     cd -

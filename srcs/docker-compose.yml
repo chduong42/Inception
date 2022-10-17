@@ -1,23 +1,26 @@
-version: '3'
+version: '3.8'
 
 services:
     mariadb:
         container_name: mariadb
-        build: mariadb
+        build: requirements/mariadb
+        image: mariadb
         volumes:
             - MariaDB:/var/lib/mysql
         networks: 
-            - backend 
+            - backend
         restart: always
         env_file:
             - .env
         
     wordpress:    
         container_name: wordpress
-        # build: wordpress
-        image : wordpress:php7.3-fpm-alpine
+        build: requirements/wordpress
+        # image : wordpress:php7.3-fpm-alpine
         volumes:      
             - WordPress:/var/www/html
+        ports:
+            - '9000'
         depends_on:
             - mariadb    
         networks: 
@@ -28,7 +31,8 @@ services:
 
     nginx:
         container_name: nginx
-        build: nginx
+        build: requirements/nginx
+        image: nginx
         volumes:
             - WordPress:/var/www/html
         ports:      

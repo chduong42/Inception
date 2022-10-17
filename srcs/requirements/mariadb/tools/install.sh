@@ -21,14 +21,13 @@
 #		system user account which will be used to perform the installation
 #
 # see https://mariadb.com/kb/en/mysql_install_db/#options
-#
+
 MYSQL_INSTALL_OPT="
     --auth-root-authentication-method=normal
     --basedir=/usr
     --datadir=/var/lib/mysql
     --skip-test-db
-    --user=mysql
-"
+    --user=mysql"
 
 set -e -x
 
@@ -41,9 +40,7 @@ printf -- "Installing MariaDB\n"
 if [ -d /var/lib/mysql/mysql ]; then
     printf -- "MariaDB already installed, skipping\n"
 else
-    # shellcheck disable=2086
     mariadb-install-db ${MYSQL_INSTALL_OPT}
-
     # initialize mariadb 'offline' (without a running daemon)
     {
         # initialize privileges table (disabled when running in bootstrap mode)
@@ -51,9 +48,9 @@ else
         # delete all root user except the one with localhost as host
         echo "DELETE FROM mysql.user WHERE User = 'root' AND Host != 'localhost';"
         # change root password
-        echo "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${MARIADB_ROOT_PASSWORD}');"
+        echo "SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${MARIADB_ROOT_PWD}');"
         # create new user
-        echo "CREATE USER '${WP_DB_USER}'@'%' IDENTIFIED BY '${WP_DB_PASSWORD}';"
+        echo "CREATE USER '${WP_DB_USER}'@'%' IDENTIFIED BY '${WP_DB_PWD}';"
         # give all permissions to the new user
         echo "GRANT ALL PRIVILEGES ON wordpress.* TO '${WP_DB_USER}'@'%';"
         # apply modifications to the grant table (maybe not necessary)
@@ -65,3 +62,15 @@ fi
 # ':' means 'do nothing'
 : > /etc/my.cnf
 rm -rf /etc/my.cnf.d/*
+
+# Replace the current shell process with the mysql server
+exec mariadbd --bind-address=0.0.0.0 --disable-skip-networking -u mysql -v
+#	--bind-address=0.0.0.0
+#		allow every address to connect
+#	--disable-skip-networking
+#		tell mariadb to listen for network connections
+#	-u mysql
+#		the system user account who will run the server,
+#		mandatory when running as root
+#	-v
+#		more information logging

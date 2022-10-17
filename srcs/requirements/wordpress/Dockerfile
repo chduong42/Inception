@@ -35,14 +35,14 @@ RUN apk add --no-cache \
 #RUN ln -s /usr/bin/php7 /usr/bin/php
 
 RUN rm -rf /etc/php7/php-fpm.d
-COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
+COPY config/php-fpm.conf /etc/php7/php-fpm.conf
 
 RUN mkdir -p /var/www
 
 # https://wp-cli.org/
 RUN curl -Lo /usr/bin/wp ${WPCLI_URL} && chmod +x /usr/bin/wp
 
-COPY script/install.sh /tmp/install.sh
+COPY config/install.sh /tmp/install.sh
 
 # ENTRYPOINT [ "php-fpm7", "-F", "-y", "/etc/php7/php-fpm.conf" ]
 ENTRYPOINT [ "sh", "/tmp/install.sh" ]
