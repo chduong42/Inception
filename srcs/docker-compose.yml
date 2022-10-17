@@ -4,11 +4,13 @@ services:
     mariadb:
         container_name: mariadb
         build: requirements/mariadb
-        image: mariadb
+        image: inception_mariadb
         volumes:
             - MariaDB:/var/lib/mysql
         networks: 
-            - backend
+            - network
+        ports:
+            - "3306:3306"
         restart: always
         env_file:
             - .env
@@ -16,15 +18,16 @@ services:
     wordpress:    
         container_name: wordpress
         build: requirements/wordpress
+        image: inception_wordpress
         # image : wordpress:php7.3-fpm-alpine
         volumes:      
             - WordPress:/var/www/html
         ports:
-            - '9000'
+            - "9000:9000"
         depends_on:
             - mariadb    
         networks: 
-            - backend
+            - network
         restart: always  
         env_file:
             - .env
@@ -32,13 +35,13 @@ services:
     nginx:
         container_name: nginx
         build: requirements/nginx
-        image: nginx
+        image: inception_nginx
         volumes:
             - WordPress:/var/www/html
         ports:      
             - "443:443"
         networks: 
-            - backend
+            - network
         restart: always
 
 volumes:
@@ -59,5 +62,5 @@ volumes:
       device: /home/chduong/data/wordpress
 
 networks:
-    backend:
+    network:
         driver: bridge
