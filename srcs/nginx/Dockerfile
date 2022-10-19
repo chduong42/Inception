@@ -1,8 +1,6 @@
 FROM alpine:3.15.6
 
-LABEL   version="1.0"\
-        maintainer="Kenny DUONG <chduong@student.42.fr>"\
-        description="NGINX"
+LABEL maintainer="Kenny DUONG <chduong@student.42.fr>"
 
 RUN apk update && apk add --no-cache nginx openssl
 
