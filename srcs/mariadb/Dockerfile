@@ -10,7 +10,6 @@ COPY config/my.cnf /etc/my.cnf.d/
 
 RUN mkdir -p /run/mysqld/ && chown -R mysql:mysql /run/mysqld
 
-COPY ./tools/entrypoint.sh /entrypoint.sh
+COPY tools/install.sh /tmp/install.sh
 
-
-ENTRYPOINT ["sh", "/entrypoint.sh"]
+ENTRYPOINT ["sh", "/tmp/install.sh"]

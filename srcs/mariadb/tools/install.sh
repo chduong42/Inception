@@ -1,6 +1,3 @@
-touch tmp_mdb
-chmod 755 tmp_mdb
-
 if [ -d /var/lib/mysql/mysql ]; then
 	echo "Already set up, starting..."
 	exec /usr/bin/mysqld --user=mysql --console $@
@@ -13,6 +10,8 @@ chown -R mysql:mysql /var/lib/mysql
 
 mariadb-install-db --auth-root-authentication-method=normal --basedir=/usr --datadir=/var/lib/mysql --skip-test-db --user=mysql
 
+touch tmp_mdb
+chmod 755 tmp_mdb
 cat << break > tmp_mdb
 CREATE DATABASE IF NOT EXISTS wordpress;
 DELETE FROM mysql.user WHERE User = 'root';
