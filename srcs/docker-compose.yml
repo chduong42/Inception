@@ -33,7 +33,8 @@ services:
             - mariadb    
         networks: 
             - network
-        restart: always  
+        restart: always
+        working_dir: /var/www/html
         env_file:
             - .env
 
