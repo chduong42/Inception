@@ -1,27 +1,15 @@
-FROM debian:buster
+FROM alpine:3.15.6
 
-EXPOSE 9000
+EXPOSE 9000 3306
 
-RUN apt-get update -y &&\
-    apt-get install -y curl mariadb-client php php7.3 php7.3-fpm php7.3-mysql php-common php7.3-cli php7.3-common php7.3-json php7.3-opcache php7.3-readline php-curl php-gd php-intl php-mbstring php-soap php-xml php-xmlrpc php-zip
+# Install dependencies
+RUN apk update && \
+    apk add --no-cache php7-fpm php7-session php7-mcrypt \
+                php7-soap php7-openssl php7-gmp php7-pdo_odbc \
+                php7-json php7-dom php7-pdo php7-zip php7-mysqli \
+                php7-sqlite3 php7-apcu php7-pdo_pgsql php7-bcmath php7-gd \
+                php7-odbc php7-pdo_mysql php7-pdo_sqli \
+                php7-gettext php7-xmlreader php7-xmlrpc php7-bz2 php7-iconv \
+                php7-pdo_dblib php7-curl php7-ctype
 
-COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
-
-RUN mkdir -p /var/run && \
-    mkdir /run/php && \
-    mkdir -p /var/www/html/
-
-COPY ./conf/wp-config.php /etc/
-# RUN  ls -l /var/www/html
-COPY ./conf/script.sh  /etc/script.sh
-RUN  chmod -R 755 /var/www/html/
-# RUN  chmod 755 /var/www/html/wp-config.php
-
-# Wordpress-cli install guide :  https://make.wordpress.org/cli/handbook/guides/installing/
-
-RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-    php wp-cli.phar --info && \
-    chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp
-
-CMD [ "sh", "/etc/script.sh" ]
+ENTRYPOINT ["php-fpm7", "-F"] 
