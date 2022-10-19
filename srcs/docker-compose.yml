@@ -11,27 +11,27 @@ services:
         networks: 
             - network
         
-    wordpress:    
-        image: inception_wordpress
-        container_name: wordpress
-        build: ./srcs/wordpress
-        restart: always
-        volumes:      
-            - WordPress:/var/www/html
-        networks: 
-            - network
+    # wordpress:    
+    #     image: inception_wordpress
+    #     container_name: wordpress
+    #     # build: ./srcs/wordpress
+    #     restart: always
+    #     volumes:      
+    #         - WordPress:/var/www/html
+    #     networks: 
+    #         - network
 
     nginx:
         image: inception_nginx
         container_name: nginx
         build: ./srcs/nginx
+        restart: always
         volumes:
             - WordPress:/var/www/html
         ports:      
             - "443:443"
         networks: 
             - network
-        restart: always
 
 volumes:
   MariaDB:
