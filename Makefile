@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 HOME	=	/home/chduong/
-DOCKER	=	docker-compose
+DOCKER	=	docker compose
 
 all		:
 	mkdir -p $(HOME)data/wordpress
