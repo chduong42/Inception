@@ -1,6 +1,6 @@
 FROM alpine:3.15.6
 
-LABEL maintainer="chduong@student.42.fr"
+LABEL maintainer="Kenny DUONG <chduong@student.42.fr>"
 
 # create a user that will run php-fpm
 #  options:
