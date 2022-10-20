@@ -1,70 +1,33 @@
 FROM alpine:3.15.6
 
+LABEL maintainer="chduong@student.42.fr"
 
-ENV DB_HOST="127.0.0.1"
+# create a user that will run php-fpm
+#  options:
+#   -S -> create a system account
+#   -D -> do not create home directory
+#   -H -> do not create home directory
+RUN adduser -SDH www-data
 
-RUN apk update && apk upgrade && apk add --no-cache \
-		wget				\
-        tar                 \
-		mariadb-client		\
-		php7				\
-		php7-fpm			\
-		php7-bcmath			\
-		php7-bz2 			\
-		php7-calendar		\
-		php7-ctype			\
-		php7-curl			\
-		php7-dom			\
-		php7-exif			\
-		php7-fileinfo		\
-		php7-gd				\
-		php7-gmagick		\
-		php7-gmp			\
-		php7-iconv			\
-		php7-imap			\
-		php7-intl			\
-		php7-json			\
-		php7-mbstring		\
-		php7-mcrypt			\
-		php7-memcache		\
-		php7-mysqli			\
-		php7-mysqlnd		\
-		php7-openssl		\
-		php7-pcntl			\
-		php7-pdo			\
-		php7-pdo_mysql		\
-		php7-pdo_pgsql		\
-		php7-pdo_sqlite 	\
-		php7-pgsql			\
-		php7-phar			\
-		php7-posix			\
-		php7-session		\
-		php7-shmop			\
-		php7-simplexml		\
-		php7-soap			\
-		php7-sockets		\
-		php7-sodium			\
-		php7-sqlite3		\
-		php7-sysvsem		\
-		php7-sysvshm		\
-		php7-tokenizer		\
-		php7-xml			\
-		php7-xmlreader		\
-		php7-xmlwriter		\
-		php7-xsl			\
-		php7-zip			\
-		php7-zlib	
+RUN apk -U upgrade && apk add --no-cache \
+	php7 php7-fpm php7-mysqli php7-json \
+	php7-curl php7-dom php7-exif php7-fileinfo \
+	php7-imagick php7-mbstring php7-openssl \
+	php7-xml php7-zip php7-iconv php7-intl \
+	php7-simplexml php7-sodium php7-xmlreader \
+	php7-zlib php7-ssh2 php7-ftp php7-sockets \
+	php7-session php7-phar php7-tokenizer \
+	curl imagemagick mariadb-client fcgi
 
-# php fpm
-RUN adduser -S nginx && addgroup -S nginx
-COPY ./conf/php-fpm.conf /etc/php7/php-fpm.conf
-COPY ./conf/www.conf /etc/php7/php-fpm.d/www.conf
+RUN rm -rf /etc/php7/php-fpm.d
 
-# wordpress
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-	&& chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp && chmod +x /usr/local/bin/wp
+COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
 
-WORKDIR /var/www/html/wordpress
+RUN mkdir -p /var/www
 
-COPY ./tools/run.sh /tmp/run.sh
-CMD ["sh", "/tmp/run.sh"]
+RUN curl -Lo /usr/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+	chmod +x /usr/bin/wp
+
+COPY tools/install.sh /tmp/install.sh
+
+ENTRYPOINT [ "sh", "/tmp/install.sh" ]

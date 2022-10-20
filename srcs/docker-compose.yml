@@ -6,6 +6,8 @@ services:
         container_name: mariadb
         build: ./srcs/mariadb
         restart: always
+        env_file:
+            - .env
         volumes:
             - MariaDB:/var/lib/mysql
         networks: 
@@ -16,6 +18,8 @@ services:
     #     container_name: wordpress
     #     # build: ./srcs/wordpress
     #     restart: always
+    #     env_file:
+    #         - .env
     #     volumes:      
     #         - WordPress:/var/www/html
     #     networks: 
