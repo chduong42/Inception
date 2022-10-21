@@ -12,7 +12,7 @@ RUN chown -R root:root /var/www/html
 
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 RUN chmod +x wp-cli.phar
-RUN mv wp-cli.phar /usr/local/bin/wp
+RUN mv wp-cli.phar /usr/local/bin/wp/
 
 COPY conf/php-fpm.conf /etc/php7/php-fpm.conf
 COPY tools/install.sh /tmp/install.sh
