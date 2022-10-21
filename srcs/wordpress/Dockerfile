@@ -4,8 +4,10 @@ LABEL maintainer="Kenny DUONG <chduong@student.42.fr>"
 
 EXPOSE 9000
 
-RUN apk update && apk upgrade && apk add --no-cache wget \
-    php7 php7-fpm php7-opcache php7-mysqli mariadb-client
+RUN apk update && apk upgrade && apk add --no-cache wget mariadb-client \
+    php8 php8-fpm php8-opcache php8-gd php8-zlib php8-curl
+
+RUN mkdir /var/run/php
 
 RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www/html
 RUN cd /var/www/html && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
