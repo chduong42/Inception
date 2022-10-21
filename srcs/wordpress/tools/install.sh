@@ -1,16 +1,9 @@
 #!/bin/sh
 
-WP_PATH='/var/www/html/wordpress'
-
 set -e -x
 
+WP_PATH='/var/www/html'
 mkdir -p "${WP_PATH}"
-mkdir -p /var/log/php7
-
-for file in access error; do
-    touch "/var/log/php7/${file}.log"
-    chmod 644 "/var/log/php7/${file}.log"
-done
 
 if ! wp core is-installed --path="${WP_PATH}" 2> /dev/null; then
     rm -rf "${WP_PATH:?}/*"
@@ -19,15 +12,15 @@ if ! wp core is-installed --path="${WP_PATH}" 2> /dev/null; then
 
     cd "${WP_PATH}"
 
-    wp config create \
+    wp config create --allow-root \
         --dbname="${WP_DB_NAME}" \
         --dbuser="${MYSQL_USER}" \
         --dbpass="${MYSQL_PASSWORD}" \
-        --dbhost="inception_mariadb" \
+        --dbhost=mariadb:3306 \
         --debug
     wp db create
     wp core install \
-        --url="chduong.42.fr/wordpress" \
+        --url="chduong.42.fr" \
         --title="${WP_TITLE}" \
         --admin_user="${WP_ADMIN_NAME}" \
         --admin_password="${WP_ADMIN_PASSWORD}" \
@@ -42,4 +35,4 @@ if ! wp core is-installed --path="${WP_PATH}" 2> /dev/null; then
     cd -
 fi
 
-exec php-fpm7 -R -F -y /etc/php7/php-fpm.conf
+exec /usr/sbin/php-fpm7 -R -F -y /etc/php7/php-fpm.conf
