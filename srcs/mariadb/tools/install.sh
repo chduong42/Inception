@@ -4,8 +4,6 @@ if [ -d /var/lib/mysql/mysql ]; then
 	exit 1
 fi
 
-mkdir -p /var/log/mysql/
-
 echo "Installing..."
 mkdir -p /var/lib/mysql
 chown -R mysql:mysql /var/lib/mysql

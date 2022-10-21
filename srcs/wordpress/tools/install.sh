@@ -20,4 +20,4 @@ wp user create "${WP_USER_NAME}" "${WP_USER_EMAIL}" \
     --user_pass="${WP_USER_PASSWORD}" \
     --porcelain
 
-exec /usr/sbin/php-fpm7 -R -F -y /etc/php7/php-fpm.conf
+exec /usr/sbin/php-fpm8 -R -F -y /etc/php7/php-fpm.conf
