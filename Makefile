@@ -25,6 +25,9 @@ stop	:
 down	:
 	$(DOCKER) -f srcs/docker-compose.yml down
 
+logs	:
+	$(DOCKER) -f srcs/docker-compose.yml logs
+
 clean:
 	docker volume ls -qf dangling=true | xargs -r docker volume rm
 	docker system prune -f -a
