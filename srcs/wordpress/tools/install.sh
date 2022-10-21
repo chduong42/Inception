@@ -8,15 +8,12 @@ mkdir -p "${WP_PATH}"
 if ! wp core is-installed --path="${WP_PATH}" 2> /dev/null; then
     rm -rf "${WP_PATH:?}/*"
 
-    wp core download --path="${WP_PATH}"
-
-    cd "${WP_PATH}"
-
     wp config create --allow-root \
         --dbname="${WP_DB_NAME}" \
         --dbuser="${MYSQL_USER}" \
         --dbpass="${MYSQL_PASSWORD}" \
         --dbhost=mariadb:3306 \
+        --path="${WP_PATH}" \
         --debug
     wp db create
     wp core install \
@@ -32,7 +29,6 @@ if ! wp core is-installed --path="${WP_PATH}" 2> /dev/null; then
         --user_pass="${WP_USER_PASSWORD}" \
         --porcelain
 
-    cd -
 fi
 
 exec /usr/sbin/php-fpm7 -R -F -y /etc/php7/php-fpm.conf
