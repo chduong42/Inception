@@ -45,7 +45,6 @@ services:
         depends_on:
             - wordpress
         
-
 volumes:
   MariaDB:
     name: MariaDB
