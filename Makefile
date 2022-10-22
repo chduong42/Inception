@@ -6,7 +6,7 @@
 #    By: chduong <chduong@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/28 19:17:46 by chduong           #+#    #+#              #
-#    Updated: 2022/10/10 18:02:21 by chduong          ###   ########.fr        #
+#    Updated: 2022/10/22 03:26:25 by chduong          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ logs	:
 	$(DOCKER) -f srcs/docker-compose.yml logs
 
 clean:
-	docker volume ls -qf dangling=true | xargs -r docker volume rm
+	# docker volume ls -qf dangling=true | xargs -r docker volume rm
 	docker system prune -f -a
 
 fclean: stop clean
