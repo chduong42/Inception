@@ -6,18 +6,18 @@
 #    By: chduong <chduong@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/09/28 19:17:46 by chduong           #+#    #+#              #
-#    Updated: 2022/10/22 03:26:25 by chduong          ###   ########.fr        #
+#    Updated: 2022/10/22 04:11:43 by chduong          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-HOME	=	/home/chduong/
+VOLUME	=	/home/chduong/data
 DOCKER	=	docker compose
 
 all		: build up
 
 build :
-	mkdir -p $(HOME)data/wordpress
-	mkdir -p $(HOME)data/mariadb
+	mkdir -p $(VOLUME)/wordpress
+	mkdir -p $(VOLUME)/mariadb
 	$(DOCKER) -f srcs/docker-compose.yml build
 
 up		:
@@ -33,11 +33,11 @@ logs	:
 	$(DOCKER) -f srcs/docker-compose.yml logs
 
 clean:
-	# docker volume ls -qf dangling=true | xargs -r docker volume rm
+	docker volume ls -qf dangling=true | xargs -r docker volume rm
 	docker system prune -f -a
 
 fclean: stop clean
-	sudo rm -rf ${HOME}data
+	sudo rm -rf ${VOLUME}
 
 re : fclean all
 
