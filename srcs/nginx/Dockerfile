@@ -2,7 +2,8 @@ FROM alpine:3.15.6
 
 LABEL maintainer="Kenny DUONG <chduong@student.42.fr>"
 
-RUN apk update && apk add --no-cache nginx openssl
+RUN apk update && apk add --no-cache nginx openssl && \
+        mkdir -p /var/log/nginx
 
 # SSL generating cert
 RUN openssl req -x509 -newkey rsa:4096 -sha256 -days 365 -nodes \

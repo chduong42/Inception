@@ -23,7 +23,7 @@ services:
         env_file:
             - .env
         volumes:      
-            - WordPress:/var/www/
+            - WordPress:/var/www/wordpress
         networks: 
             - network
         depends_on:
@@ -37,7 +37,7 @@ services:
         build: ./srcs/nginx
         restart: always
         volumes:
-            - WordPress:/var/www/
+            - WordPress:/var/www/wordpress
         ports:      
             - "443:443"
         networks: 
@@ -64,4 +64,3 @@ volumes:
 
 networks:
     network:
-        driver: bridge
