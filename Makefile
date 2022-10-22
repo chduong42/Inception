@@ -13,10 +13,14 @@
 HOME	=	/home/chduong/
 DOCKER	=	docker compose
 
-all		:
+all		: build up
+
+build :
 	mkdir -p $(HOME)data/wordpress
 	mkdir -p $(HOME)data/mariadb
 	$(DOCKER) -f srcs/docker-compose.yml build
+
+up		:
 	$(DOCKER) -f srcs/docker-compose.yml up -d
 
 stop	:
@@ -29,11 +33,11 @@ logs	:
 	$(DOCKER) -f srcs/docker-compose.yml logs
 
 clean:
-	docker volume ls -qf dangling=true | xargs -r docker volume rm
+	# docker volume ls -qf dangling=true | xargs -r docker volume rm
 	docker system prune -f -a
 
 fclean: stop clean
-	rm -rf ${HOME}data
+	sudo rm -rf ${HOME}data
 
 re : fclean all
 
